@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const response = require('./response');
 
 const logger = require('./logger');
 const pino = require('pino-http')({
@@ -41,13 +42,7 @@ app.use(passport.initialize());
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
-  res.status(404).json({
-    status: 'error',
-    error: {
-      message: 'not found',
-      code: 404,
-    },
-  });
+  res.status(404).json(response.createErrorResponse(404, 'not found'));
 });
 
 // Add error-handling middleware to deal with anything else
