@@ -4,14 +4,8 @@
 # Steps to setup
 1. Use git clone https://github.com/bhavik001/fragments to clone this repository
 2. Install all the dependencies using terminal.
-3. The dependencies are given below:
 ```sh
-npm init -y
-npm install --save-dev --save-exact prettier
-npm install --save-dev eslint
-npm install --save pino pino-pretty pino-http
-npm install --save express cors helmet compression
-npm install --save stoppable
+npm install
 ```
 
  # After Set-up to run the code use the command given below:
