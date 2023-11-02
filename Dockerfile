@@ -1,7 +1,5 @@
-#This is dockerfile for building a docker image for the fragments Microservice
-
-# Use node version 18.13.0
-FROM node:18.13.0
+# Use node version 18.13.0 as the build image
+FROM node:18.13.0 AS build
 
 LABEL maintainer="Bhavikkumar Mistry <bhmistry@myseneca.ca>"
 LABEL description="Fragments node.js microservice"
@@ -20,16 +18,26 @@ ENV NPM_CONFIG_COLOR=false
 # Use /app as our working directory
 WORKDIR /app
 
-# Option 1: explicit path - Copy the package.json and package-lock.json
-# files into /app. NOTE: the trailing `/` on `/app/`, which tells Docker
-# that `app` is a directory and not a file.
-COPY ./package*.json /app/
+# Copy the package.json and package-lock.json files into /app
+COPY package*.json /app/
 
 # Install node dependencies defined in package-lock.json
-RUN npm install
+RUN npm ci --only=production
 
 # Copy src to /app/src/
 COPY ./src ./src
+
+# Use node version 18.13.0 as the final image
+FROM node:18.13.0
+
+# We default to use port 8080 in our service
+ENV PORT=8080
+
+# Use /app as our working directory
+WORKDIR /app
+
+# Copy the built files from the build image
+COPY --from=build /app /app
 
 # Copy our HTPASSWD file
 COPY ./tests/.htpasswd ./tests/.htpasswd
