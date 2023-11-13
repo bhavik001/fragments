@@ -4,6 +4,11 @@ const { randomUUID } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 const logger = require('../logger');
+const md = require('markdown-it')({
+  html: true,
+});
+
+const mime = require('mime-types');
 
 // Functions for working with fragment metadata/data using our DB
 const {
@@ -134,7 +139,11 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return ['text/plain'];
+    if (this.mimeType === 'text/plain') return ['text/plain'];
+    else if (this.mimeType === 'text/markdown') return ['text/markdown', 'text/html', 'text/plain'];
+    else if (this.mimeType === 'text/html') return ['text/html', 'text/plain'];
+    else if (this.mimeType === 'application/json') return ['application/json', 'text/plain'];
+    else return [];
   }
 
   /**
@@ -143,7 +152,38 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    return value === 'text/plain' || value === 'text/plain; charset=utf-8';
+    if (
+      value == 'text/plain' ||
+      value == 'text/plain; charset=utf-8' ||
+      value == 'text/markdown' ||
+      value == 'text/html' ||
+      value == 'application/json' ||
+      value == 'application/json; charset=utf-8'
+    )
+      return true;
+    else return false;
+  }
+
+  async convertTo(data, extension) {
+    let type = mime.lookup(extension);
+    if (!type) throw new Error('invalid extension');
+    const formats = this.formats;
+    if (!formats.includes(type)) throw new Error('unsupported format');
+    var convertedData;
+    if (type === this.mimeType) return data;
+    if (this.mimeType == 'text/markdown' && type == 'text/html') {
+      convertedData = md.render(data.toString());
+    } else if (this.mimeType == 'text/markdown' && type == 'text/plain') {
+      convertedData = data.toString();
+    } else if (this.mimeType == 'text/html' && type == 'text/plain') {
+      convertedData = data.toString().replace(/(<([^>]+)>)/gi, '');
+    } else if (this.mimeType == 'application/json' && type == 'text/plain') {
+      const obj = JSON.parse(data.toString());
+      const entries = Object.entries(obj);
+      const result = entries.map(([key, value]) => `${key}: ${value}`).join(', ');
+      convertedData = result;
+    }
+    return convertedData;
   }
 }
 module.exports.Fragment = Fragment;
