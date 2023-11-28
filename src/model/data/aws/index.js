@@ -1,8 +1,8 @@
+// XXX: temporary use of memory-db until we add DynamoDB
 const MemoryDB = require('../memory/memory-db');
-
 const s3Client = require('./s3Client');
-const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const logger = require('../../../logger');
+const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 // Create two in-memory databases: one for fragment metadata and the other for raw data
 const metadata = new MemoryDB();
@@ -88,7 +88,6 @@ async function readFragmentData(ownerId, id) {
   }
 }
 
-
 // Get a list of fragment ids/objects for the given user from memory db. Returns a Promise
 async function listFragments(ownerId, expand = false) {
   const fragments = await metadata.query(ownerId);
@@ -109,8 +108,11 @@ async function deleteFragment(ownerId, id) {
     // Our key will be a mix of the ownerID and fragment id, written as a path
     Key: `${ownerId}/${id}`,
   };
+
   // Create a DELETE Object command to send to S3
   const command = new DeleteObjectCommand(params);
+
+  // Create a DELETE command to send to DynamoDB
 
   try {
     // Use our client to send the command
