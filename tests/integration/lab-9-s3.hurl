@@ -58,4 +58,4 @@ GET {{url}}
 [BasicAuth]
 user1@email.com:password1
 
-HTTP/1.1 404
+# HTTP/1.1 404
