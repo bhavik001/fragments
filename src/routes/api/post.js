@@ -1,45 +1,27 @@
 // src/routes/api/post.js
-
-const response = require('../../response');
 const { Fragment } = require('../../model/fragment');
-require('dotenv').config();
+const { createSuccessResponse, createErrorResponse } = require('../../response');
+const contentType = require('content-type');
 const logger = require('../../logger');
 
-const url = process.env.API_URL;
-
 module.exports = async (req, res) => {
-  try {
-    logger.debug(`POST /v1/fragments called`);
-    if (!Buffer.isBuffer(req.body)) {
-      logger.warn(`POST /v1/fragments - Body requires correct data that is supported`);
-      return res
-        .status(415)
-        .json(
-          response.createErrorResponse(
-            415,
-            'Unsupported Media Type: Body must supported valid fragment data'
-          )
-        );
+  const type = contentType.parse(req.headers['content-type']).type;
+  const ownerId = req.user;
+
+  if (Buffer.isBuffer(req.body) === true && Fragment.isSupportedType(type)) {
+    const fragment = new Fragment({ ownerId, type });
+
+    try {
+      await fragment.save();
+      await fragment.setData(req.body);
+      res.location(`${process.env.API_URL}/v1/fragments/${fragment.id}`);
+      res.status(201).json(createSuccessResponse({ fragment: fragment }));
+    } catch (error) {
+      logger.error({ error }, 'post request failed', { ownerId });
+      throw new Error({ error }, 'unable to save fragment');
     }
-    logger.debug(`POST /v1/fragments - Body received`);
-    const fragment = new Fragment({
-      ownerId: req.user,
-      type: req.get('Content-Type'),
-    });
-    logger.debug(`POST /v1/fragments - Fragment created`);
-    await fragment.save();
-    await fragment.setData(req.body);
-    logger.debug(`POST /v1/fragments - Fragment saved`);
-    res.setHeader('Location', url + '/v1/fragments/' + fragment.id);
-    logger.debug(`POST /v1/fragments - Location header`);
-    return res.status(201).json(
-      response.createSuccessResponse({
-        status: 'ok',
-        fragment: fragment,
-      })
-    );
-  } catch (err) {
-    logger.error(`POST /v1/fragments - Internal Server Error: ${err}`);
-    return res.status(500).json(response.createErrorResponse(500, err.message));
+  } else {
+    logger.error('post request failed', { ownerId });
+    res.status(415).json(createErrorResponse(415, 'Content-Type is not supported'));
   }
 };
