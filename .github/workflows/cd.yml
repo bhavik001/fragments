@@ -67,6 +67,8 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_COGNITO_POOL_ID: ${{ secrets.AWS_COGNITO_POOL_ID }}
           AWS_COGNITO_CLIENT_ID: ${{ secrets.AWS_COGNITO_CLIENT_ID }}
+          AWS_DYNAMODB_TABLE_NAME: ${{ secrets.AWS_DYNAMODB_TABLE_NAME}}
+          AWS_S3_BUCKET_NAME: ${{secrets.AWS_S3_BUCKET_NAME}}
           API_URL: ${{ secrets.API_URL }}
         with:
           task-definition: fragments-definition.json
