@@ -3,7 +3,7 @@
 # Stage 0: Base
 ################################################################################
 # Use node version 18.13.0
-FROM node:18.13.0-alpine@sha256:fda98168118e5a8f4269efca4101ee51dd5c75c0fe56d8eb6fad80455c2f5827 AS base 
+FROM node:20.3-alpine3.17@sha256:ff86266a784bbe13506b72602326be208068ffb27b343c409233b60ce681d366 AS base 
 
 LABEL maintainer="Bhavikkumar Mistry <bhmistry@myseneca.ca>"
 LABEL description="Fragments node.js microservice"
@@ -35,7 +35,7 @@ RUN npm ci --only=production
 # Stage 1: local deployment
 ################################################################################
 
-FROM node:18.13.0-alpine@sha256:fda98168118e5a8f4269efca4101ee51dd5c75c0fe56d8eb6fad80455c2f5827 AS deploy
+FROM node:20.3-alpine3.17@sha256:ff86266a784bbe13506b72602326be208068ffb27b343c409233b60ce681d366 AS deploy
 
 # Set the default working directory
 WORKDIR /app
