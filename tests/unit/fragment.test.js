@@ -6,7 +6,16 @@ const { Fragment } = require('../../src/model/fragment');
 // if it isn't long enough for your test runs. Returns a Promise.
 const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const validTypes = [`text/plain`, `text/markdown`, `text/html`, `application/json`];
+const validTypes = [
+  `text/plain`,
+  `text/markdown`,
+  `text/html`,
+  `application/json`,
+  `image/png`,
+  `image/jpeg`,
+  `image/webp`,
+  `image/gif`,
+];
 
 describe('Fragment class', () => {
   test('common formats are supported', () => {
@@ -166,6 +175,36 @@ describe('Fragment class', () => {
         size: 0,
       });
       expect(fragment.formats).toEqual(['text/markdown', 'text/html', 'text/plain']);
+    });
+
+    test('formats returns the expected result for image types', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'image/png',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['image/png', 'image/jpeg', 'image/gif', 'image/webp']);
+
+      const fragment2 = new Fragment({
+        ownerId: '1234',
+        type: 'image/jpeg',
+        size: 0,
+      });
+      expect(fragment2.formats).toEqual(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
+      const fragment3 = new Fragment({
+        ownerId: '1234',
+        type: 'image/gif',
+        size: 0,
+      });
+      expect(fragment3.formats).toEqual(['image/gif', 'image/png', 'image/jpeg', 'image/webp']);
+
+      const fragment4 = new Fragment({
+        ownerId: '1234',
+        type: 'image/webp',
+        size: 0,
+      });
+      expect(fragment4.formats).toEqual(['image/webp', 'image/png', 'image/jpeg', 'image/gif']);
     });
   });
 
