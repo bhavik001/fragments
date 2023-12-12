@@ -9,6 +9,13 @@ const url = process.env.API_URL;
 
 module.exports = async (req, res) => {
   try {
+    console.log(process.env.AWS_COGNITO_CLIENT_ID);
+    console.log(process.env.AWS_COGNITO_POOL_ID);
+    console.log(process.env.AWS_S3_BUCKET_NAME);
+    console.log(process.env.AWS_DYNAMODB_TABLE_NAME);
+    console.log(process.env.AWS_ACCESS_KEY_ID);
+    console.log(process.env.AWS_SECRET_ACCESS_KEY);
+    console.log(process.env.AWS_SESSION_TOKEN);
     logger.debug(`POST /v1/fragments called`);
     if (!Buffer.isBuffer(req.body)) {
       logger.warn(`POST /v1/fragments - Body requires correct data that is supported`);
@@ -44,6 +51,9 @@ module.exports = async (req, res) => {
     console.log(process.env.AWS_COGNITO_POOL_ID);
     console.log(process.env.AWS_S3_BUCKET_NAME);
     console.log(process.env.AWS_DYNAMODB_TABLE_NAME);
+    console.log(process.env.AWS_ACCESS_KEY_ID);
+    console.log(process.env.AWS_SECRET_ACCESS_KEY);
+    console.log(process.env.AWS_SESSION_TOKEN);
     return res.status(500).json(response.createErrorResponse(500, err.message));
   }
 };
