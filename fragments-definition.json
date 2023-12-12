@@ -53,7 +53,20 @@
         {
           "name": "AWS_DYNAMODB_TABLE_NAME",
           "value": "fragments"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "value": "ASIAZ7O6EFMSNBEBXSHG"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "value": "b3TbG9aQkoPZG6CNJvfTznmVzdNP1v5L/qILLai/"
+        },
+        {
+          "name": "AWS_SESSION_TOKEN",
+          "value": "FwoGZXIvYXdzEM///////////wEaDMyCTMtdK5EmwfPZMCLPAdb6jmDoeUHI0MYwbfP9jz5ZWDYPQw4MmKTVsgWuqZek2MiHTyuhWeqLd7g9SlLkWpnWSd2o2KEl/xJTlVxRo7PqOC34jhcIr7wAZb46llR8nY1An/5lfFMXH8wGmsqBKhA4vNxxhz51GzeJN3nAez84XGfk3UxKiMz+Mmny29ExdGvOwRVO2tdghYJY8bEu0dvmdYtm5xvpLP1ISgmy/Ka17Y4Yq8UTbNxjdm8vMkgXYUIkTY9Jbb7aVT5Ji4fQt1r3lZNRbJ2SyptvdXTL7yi/o+OrBjIt+xn/iFbO06RDwO4y6Ol2wCtguJEvEI3O1SwtrMxQsgEGUQHWuvb75CPgiwtO"
         }
+        
       ],
       "resourceRequirements": null,
       "ulimits": null,
