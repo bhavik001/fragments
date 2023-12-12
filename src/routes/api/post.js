@@ -41,6 +41,9 @@ module.exports = async (req, res) => {
   } catch (err) {
     logger.error(`POST /v1/fragments - Internal Server Error: ${err}`);
     console.log(process.env.AWS_COGNITO_CLIENT_ID);
+    console.log(process.env.AWS_COGNITO_POOL_ID);
+    console.log(process.env.AWS_S3_BUCKET_NAME);
+    console.log(process.env.AWS_DYNAMODB_TABLE_NAME);
     return res.status(500).json(response.createErrorResponse(500, err.message));
   }
 };
