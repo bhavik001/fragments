@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
     );
   } catch (err) {
     logger.error(`POST /v1/fragments - Internal Server Error: ${err}`);
+    console.log(process.env.AWS_COGNITO_CLIENT_ID);
     return res.status(500).json(response.createErrorResponse(500, err.message));
   }
 };
